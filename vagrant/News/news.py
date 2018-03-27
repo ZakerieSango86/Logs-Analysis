@@ -2,6 +2,7 @@ import webbrowser
 import os
 from newsdb import post_articles, post_authors, post_errors
 
+# Styles and scripting for the page
 main_page_head = '''
 <head>
     <meta charset="utf-8">
@@ -80,11 +81,14 @@ error_report_content = '''
 </div>
 '''
 
+
+# Python code to format web content
 top_articles = post_articles()
 top_authors = post_authors()
 top_errors = post_errors()
 
 def create_article_report(query_list):
+    """Return a list of top articles, formatted into string variables"""
     content = ''
     content += article_report_content.format(
         report_title = "The top 3 articles of all time:",
@@ -94,8 +98,8 @@ def create_article_report(query_list):
         )
     return content
 
-
 def create_author_report(query_list):
+    """Return a list of top authors, formatted into string variables"""
     content = ''
     content += author_report_content.format(
         report_title = "The top 3 authors of all time:",
@@ -106,6 +110,7 @@ def create_author_report(query_list):
     return content
 
 def create_error_report(query_list):
+    """Return a single entry list, formatted into a string variable"""
     content = ''
     content += error_report_content.format(
         report_title = "The day we had the most failed attempts to access our site:",
@@ -115,22 +120,25 @@ def create_error_report(query_list):
 
 
 def open_report_page(articles, authors, errors):
-  # Create or overwrite the output file
-  output_file = open('news.html', 'w')
+    """Create a html report using data from the News DB.
 
-  # Replace the placeholder for the report tiles with the actual dynamically generated content
-  rendered_content = main_page_content.format(article_report=create_article_report(articles),
+    Keyword arguments:
+    articles -- list of articles
+    authors -- list of authors
+    errors -- list of errors
+    """
+
+    # Create or overwrite the output file
+    output_file = open('news.html', 'w')
+
+    # Replace the placeholder for the report tiles with the actual dynamically generated content
+    rendered_content = main_page_content.format(article_report=create_article_report(articles),
                                             author_report=create_author_report(authors),
                                             error_report=create_error_report(errors))
 
-  # Output the file
-  output_file.write(main_page_head + rendered_content)
-  output_file.close()
-
-  # open the output file in the browser
-  url = os.path.abspath(output_file.name)
-  webbrowser.open('file://' + url, new=2) # open in a new tab, if possible
-
+    # Output the file
+    output_file.write(main_page_head + rendered_content)
+    output_file.close()
 
 
 open_report_page(top_articles, top_authors, top_errors)
